@@ -1,5 +1,7 @@
 # Recipes Server Project (Node.js + Express + MongoDB Atlas)
 
+**מגישה:** נועה
+
 ## מטרת הפרויקט (לפי המסמך)
 שרת **API RESTful** ב־Express עם **MongoDB Atlas**.  
 הבדיקה הנדרשת היא דרך **Postman** או **Thunder Client** (ייבוא הקולקציה מהפרויקט) — אין כאן אפליקציית דפדפן מלאה.
@@ -50,6 +52,10 @@ API body accepts **either** `category` (single category **code** string) **or** 
 ### Category
 `code`, `description`, `recipeCount`, `recipes[]` — maintained when recipes change.
 
+### הערות מודל (Referencing)
+- **מתכון → משתמש:** `addedBy` מקשר ל־User (לא משכפלים פרטי משתמש במסמך המתכון).
+- **קטגוריה → מתכונים:** לקטגוריה יש מערך `recipes` של מזהי מתכונים, לשליפה עם populate.
+
 ## API table (primary paths)
 | Resource | Method | URL | Auth |
 |----------|--------|-----|------|
@@ -80,8 +86,7 @@ Folders: **Auth**, **Users**, **Recipes**, **Categories**, **Health**.
 
 Optional CLI smoke (same HTTP flows): `npm run smoke` (server must be running).
 
-## Git / GitHub
-Use `git` throughout the project and push to GitHub as required by the assignment (not automated here).
+Repository: [Noa-kay/Recipes-Project-NodeJS](https://github.com/Noa-kay/Recipes-Project-NodeJS)
 
 ## Error format
 ```json
