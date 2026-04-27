@@ -1,0 +1,202 @@
+{
+  "info": {
+    "_postman_id": "9dd9dbb5-a32f-4767-b8b9-df1d585bb483",
+    "name": "Recipes API",
+    "description": "REST API per assignment. Primary URLs: /auth, /users, /recipes, /categories, /health.\nSame routes also work under /api/* for compatibility.\nTest with Postman or Thunder Client (import this file).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Noa\",\n  \"email\": \"noa@example.com\",\n  \"password\": \"Pass1234\",\n  \"address\": \"Jerusalem\",\n  \"role\": \"user\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"noa@example.com\",\n  \"password\": \"Pass1234\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "Update Password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"Pass1234\",\n  \"newPassword\": \"Newpass123\"\n}"
+            },
+            "url": "{{baseUrl}}/users/{{userId}}/password"
+          }
+        },
+        {
+          "name": "Delete User (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/users/{{userId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recipes",
+      "item": [
+        {
+          "name": "Get Recipes (Search + Paging)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/recipes?search=cake&limit=5&page=1"
+          }
+        },
+        {
+          "name": "Get Recipe by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/recipes/{{recipeId}}"
+          }
+        },
+        {
+          "name": "Get Recipes by Max Time",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/recipes/max-time/30"
+          }
+        },
+        {
+          "name": "Create Recipe (single category code)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Chocolate Cake\",\n  \"description\": \"Soft and rich chocolate cake\",\n  \"category\": \"cakes\",\n  \"categoryDescription\": \"Cakes and desserts\",\n  \"preparationTime\": 50,\n  \"difficulty\": 3,\n  \"layers\": [{\"description\": \"Base\", \"ingredients\": [\"flour\", \"cocoa\", \"sugar\"]}],\n  \"instructions\": [\"Mix\", \"Bake\"],\n  \"image\": \"https://example.com/cake.jpg\",\n  \"isPrivate\": false\n}"
+            },
+            "url": "{{baseUrl}}/recipes"
+          }
+        },
+        {
+          "name": "Create Recipe (multiple category codes)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Holiday Cake\",\n  \"description\": \"For parties\",\n  \"categories\": [\"cakes\", \"party\"],\n  \"preparationTime\": 60,\n  \"difficulty\": 4,\n  \"layers\": [],\n  \"instructions\": [\"Bake\"],\n  \"isPrivate\": false\n}"
+            },
+            "url": "{{baseUrl}}/recipes"
+          }
+        },
+        {
+          "name": "Update Recipe",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"preparationTime\": 45,\n  \"difficulty\": 2\n}"
+            },
+            "url": "{{baseUrl}}/recipes/{{recipeId}}"
+          }
+        },
+        {
+          "name": "Delete Recipe",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/recipes/{{recipeId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/categories"
+          }
+        },
+        {
+          "name": "Get Categories with Recipes",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/categories/with-recipes"
+          }
+        },
+        {
+          "name": "Get Category by Code or Name",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/categories/{{categoryKey}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" },
+    { "key": "userId", "value": "" },
+    { "key": "recipeId", "value": "" },
+    { "key": "categoryKey", "value": "cakes" }
+  ]
+}
