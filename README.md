@@ -1,7 +1,5 @@
 # Recipes Server Project (Node.js + Express + MongoDB Atlas)
 
-**מגישה:** נועה
-
 ## מטרת הפרויקט (לפי המסמך)
 שרת **API RESTful** ב־Express עם **MongoDB Atlas**.  
 הבדיקה הנדרשת היא דרך **Postman** או **Thunder Client** (ייבוא הקולקציה מהפרויקט) — אין כאן אפליקציית דפדפן מלאה.
