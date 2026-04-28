@@ -176,31 +176,3 @@ mongoexport --uri="<MONGO_URI>" --db="recipes_db" --collection="categories" --ou
 
 Zip the JSON files and submit.
 
-## 5-10 minute video checklist (exact flow)
-
-1. **Project structure tour**  
-   Show folders: `src/config`, `src/models`, `src/controllers`, `src/routes`, `src/middlewares`, `src/validations`, `postman`, `scripts`, and explain each in 1-2 sentences.
-2. **Main flow files**  
-   Open `src/server.js` and `src/app.js`, explain app startup, DB connect, routes mount, error middlewares.
-3. **Authentication + authorization**  
-   Show `src/middlewares/auth.js` and explain JWT + roles (`admin`, `user`, guest).
-4. **One full request demo in Postman/Thunder**
-   - `POST /auth/register` (or `POST /auth/login`) to get token
-   - `POST /recipes` with Bearer token
-   - `GET /recipes` to verify result  
-   Explain "request -> route -> validation -> controller -> model (MongoDB) -> response".
-5. **Categories behavior**
-   Show `GET /categories/with-recipes` and explain automatic category updates from recipe create/delete.
-6. **Error handling**
-   Trigger one error (for example bad body) and show response format:  
-   `{ "error": { "message": "..." } }`.
-
-## Final pre-submit checklist
-
-- `npm install` completed
-- `.env` configured to Atlas (`USE_MEMORY_DB=false`)
-- Server starts with `npm run dev`
-- Postman collection works (`postman/Recipes-API.postman_collection.json`)
-- README and API table updated
-- DB export file prepared (`db-export.zip` or JSON zip)
-- Video recording (5-10 min) prepared
