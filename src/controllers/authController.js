@@ -10,10 +10,11 @@ const toAuthResponse = (user) => {
     { expiresIn: env.jwtExpiresIn }
   );
 
+  const userId = user._id.toString();
   return {
     token,
     user: {
-      id: user._id,
+      id: userId,
       username: user.username,
       email: user.email,
       address: user.address,

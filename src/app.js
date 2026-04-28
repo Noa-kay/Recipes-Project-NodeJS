@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const env = require('./config/env');
@@ -24,22 +25,6 @@ const healthHandler = (_req, res) => {
 app.get('/health', healthHandler);
 app.get('/api/health', healthHandler);
 
-/** Root: assignment is API + Postman/Thunder — no full browser UI. */
-app.get('/', (_req, res) => {
-  res.status(200).json({
-    message: 'Recipes REST API. Test with Postman or Thunder Client.',
-    collection: 'postman/Recipes-API.postman_collection.json',
-    paths: {
-      health: '/health',
-      auth: '/auth',
-      users: '/users',
-      recipes: '/recipes',
-      categories: '/categories',
-      legacyApiPrefix: '/api/* (same routes)',
-    },
-  });
-});
-
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/recipes', recipeRoutes);
@@ -49,6 +34,13 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/categories', categoryRoutes);
+
+/** דף מתכונים (צד לקוח) — אחרי ה-API כדי שלא ייחסם נתיבים. */
+app.use(
+  express.static(path.join(__dirname, '..', 'public'), {
+    index: 'index.html',
+  })
+);
 
 app.use(notFound);
 app.use(errorHandler);

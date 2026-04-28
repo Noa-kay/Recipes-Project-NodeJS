@@ -99,6 +99,25 @@
           }
         },
         {
+          "name": "Upload Recipe Image",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "description": "JPEG, PNG, GIF or WebP — max 5MB. Response: { \"url\": \"/uploads/recipes/...\" } for use in recipe image field.",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/recipes/upload-image"
+          }
+        },
+        {
           "name": "Create Recipe (single category code)",
           "request": {
             "method": "POST",

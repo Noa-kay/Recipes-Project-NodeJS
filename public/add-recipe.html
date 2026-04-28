@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>הוספת מתכון · מתכונים</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script>
+    (function () {
+      if (!localStorage.getItem('recipes_jwt')) location.replace('/');
+    })();
+  </script>
+</head>
+<body data-page="add-recipe">
+  <div id="appView">
+    <header class="site-header">
+      <div class="inner inner--app">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">מ</div>
+          <div>
+            <h1>מתכונים</h1>
+            <span>מתכונים ביתיים — שיתוף ושמירה במקום אחד</span>
+          </div>
+        </div>
+        <div id="userBlock" class="header-user">
+          <span class="header-user-email" id="userEmail"></span>
+          <button type="button" class="ghost btn-logout-header" id="btnLogout">יציאה</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero hero--short">
+      <div class="inner">
+        <p class="hero-back-wrap"><a href="/" class="hero-back-link">חזרה לרשימת המתכונים</a></p>
+        <h2>יצירת מתכון</h2>
+        <p>מלאי את הפרטים ושמרי — בסיום תוחזרי לרשימה הראשית.</p>
+      </div>
+    </section>
+
+    <div class="layout layout-single">
+      <main class="main-flow">
+        <div class="panel panel-recipe-form panel-recipe-form--standalone">
+          <h2 id="recipeFormTitle">הוספת מתכון חדש</h2>
+          <p class="panel-intro">מלאי את הפרטים בזה אחר זה. אחרי שמירה תועברי לרשימת המתכונים.</p>
+          <div id="addAlert" class="alert hidden"></div>
+
+          <fieldset class="form-section">
+            <legend>פרטים כלליים</legend>
+            <div class="form-two-col">
+              <label class="field-block">שם המתכון
+                <input type="text" id="newName" placeholder="למשל: עוגת שוקולד רכה" />
+              </label>
+              <label class="field-block">קטגוריה
+                <input type="text" id="newCat" placeholder="למשל: עוגות, מרקים, סלטים" />
+              </label>
+            </div>
+            <label class="field-block">תיאור קצר
+              <textarea id="newDesc" rows="2" placeholder="בשורה או שתיים — על מה המתכון ומה מיוחד בו"></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>זמן ורמת קושי</legend>
+            <div class="form-two-col form-two-col--narrow">
+              <label class="field-block">זמן הכנה (דקות)
+                <input type="number" id="newTime" value="30" min="0" class="input-number" />
+              </label>
+              <label class="field-block">רמת קושי
+                <select id="newDiff">
+                  <option value="1">1 — קל מאוד</option>
+                  <option value="2">2 — קל</option>
+                  <option value="3" selected>3 — בינוני</option>
+                  <option value="4">4 — דורש ניסיון</option>
+                  <option value="5">5 — מאתגר</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>מרכיבים</legend>
+            <p class="field-hint">רשמי מרכיב אחד בכל שורה, או הפרידי בפסיקים.</p>
+            <label class="field-block">
+              <textarea id="newIngredients" rows="5" placeholder="קמח — 2 כוסות&#10;סוכר — חצי כוס&#10;ביצים — 3"></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>הוראות הכנה</legend>
+            <p class="field-hint">שלב אחד בכל שורה (מספר 1, 2, 3… יסודרו אוטומטית).</p>
+            <label class="field-block">
+              <textarea id="newSteps" rows="6" placeholder="לחמם תנור ל־180 מעלות&#10;לערבב יבשים בנפרד&#10;לאפות כ־25 דקות"></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>תמונה (אופציונלי)</legend>
+            <p class="field-hint">באותה שורה: הדביקי קישור לתמונה מהרשת (למשל מ־Google) או בחרי קובץ מהמחשב.</p>
+            <div class="field-block field-block--image-combo">
+              <span class="field-label-text">קישור או קובץ</span>
+              <div class="image-input-row">
+                <input type="text" id="newImage" class="image-url-input" placeholder="https://… (קישור לתמונה)" autocomplete="off" />
+                <button type="button" class="btn-pick-image" id="btnPickImage">בחירת תמונה מהמחשב</button>
+                <input type="file" id="newImageFile" class="sr-only-input" accept="image/jpeg,image/png,image/gif,image/webp" tabindex="-1" aria-hidden="true" />
+              </div>
+            </div>
+          </fieldset>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="newPrivate" />
+            <span>מתכון פרטי — רק אני רואה אותו</span>
+          </label>
+
+          <div class="form-actions-row form-actions-row--center">
+            <button type="button" class="btn-primary-full btn-submit-recipe" id="btnAddRecipe">שמירת המתכון</button>
+            <button type="button" class="ghost hidden" id="btnCancelEdit">ביטול עריכה</button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      מתכונים · כל הזכויות שמורות
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

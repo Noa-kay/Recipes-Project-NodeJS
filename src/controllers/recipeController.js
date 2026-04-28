@@ -84,7 +84,7 @@ const getRecipes = async (req, res, next) => {
 
     const recipes = await Recipe.find(query)
       .populate('categories', 'code description')
-      .populate('addedBy', 'username email')
+      .populate('addedBy', '_id username email')
       .sort({ addedDate: -1 })
       .skip((page - 1) * limit)
       .limit(limit);
@@ -99,7 +99,7 @@ const getRecipeById = async (req, res, next) => {
   try {
     const recipe = await Recipe.findById(req.params.id)
       .populate('categories', 'code description')
-      .populate('addedBy', 'username email');
+      .populate('addedBy', '_id username email');
     if (!recipe) return next({ status: 404, message: 'Recipe not found' });
 
     if (recipe.isPrivate && !canManageRecipe(recipe, req.user)) {
@@ -155,7 +155,7 @@ const createRecipe = async (req, res, next) => {
 
     const populated = await Recipe.findById(recipe._id)
       .populate('categories', 'code description')
-      .populate('addedBy', 'username email');
+      .populate('addedBy', '_id username email');
 
     return res.status(201).json(populated);
   } catch (err) {
@@ -194,9 +194,19 @@ const updateRecipe = async (req, res, next) => {
 
     const populated = await Recipe.findById(recipe._id)
       .populate('categories', 'code description')
-      .populate('addedBy', 'username email');
+      .populate('addedBy', '_id username email');
 
     return res.status(200).json(populated);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+const uploadRecipeImage = async (req, res, next) => {
+  try {
+    if (!req.file) return next({ status: 400, message: 'No image file' });
+    const url = `/uploads/recipes/${req.file.filename}`;
+    return res.status(201).json({ url });
   } catch (err) {
     return next(err);
   }
@@ -224,5 +234,6 @@ module.exports = {
   getRecipesByPreparationTime,
   createRecipe,
   updateRecipe,
+  uploadRecipeImage,
   deleteRecipe,
 };

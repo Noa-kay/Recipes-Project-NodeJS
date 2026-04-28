@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>מתכונים</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- מסך 1: כניסה או הרשמה בלבד -->
+  <div id="gateView" class="gate-view">
+    <div class="gate-inner">
+      <div class="gate-brand">
+        <div class="brand-mark brand-mark--large" aria-hidden="true">מ</div>
+        <div>
+          <h1 class="gate-title">מתכונים</h1>
+          <p class="gate-tagline">מתכונים ביתיים — התחברי או הירשמי כדי להמשיך</p>
+        </div>
+      </div>
+
+      <div id="authAlert" class="alert hidden"></div>
+
+      <div id="guestBlock" class="gate-auth">
+        <div class="auth-tabs" role="tablist">
+          <button type="button" class="auth-tab is-active" id="tabLogin" role="tab" aria-selected="true" aria-controls="loginPanel">כניסה</button>
+          <button type="button" class="auth-tab" id="tabRegister" role="tab" aria-selected="false" aria-controls="registerPanel">הרשמה</button>
+        </div>
+
+        <div id="loginPanel" class="auth-card auth-panel" role="tabpanel" aria-labelledby="tabLogin">
+          <p class="auth-card-lead">הזיני אימייל וסיסמה כדי להמשיך.</p>
+          <div class="stack">
+            <label class="field-block">אימייל
+              <input type="email" id="loginEmail" autocomplete="username" placeholder="you@example.com" />
+            </label>
+            <label class="field-block">סיסמה
+              <input type="password" id="loginPass" autocomplete="current-password" />
+            </label>
+          </div>
+          <button type="button" class="btn-primary-full" id="btnLogin">התחברות</button>
+        </div>
+
+        <div id="registerPanel" class="auth-card auth-card--accent auth-panel hidden" role="tabpanel" aria-labelledby="tabRegister">
+          <p class="auth-card-lead">משתמשת חדשה? מלאי את הפרטים ליצירת חשבון.</p>
+          <div class="stack">
+            <label class="field-block">שם משתמש
+              <input type="text" id="regUser" autocomplete="name" placeholder="השם שיוצג אצלך" />
+            </label>
+            <label class="field-block">אימייל
+              <input type="email" id="regEmail" autocomplete="email" />
+            </label>
+            <label class="field-block field-block--reg-pass">סיסמה
+              <input type="password" id="regPass" autocomplete="new-password" placeholder="לפחות 8 תווים, אות ומספר" />
+              <div class="password-meter" aria-hidden="true">
+                <div class="password-meter__fill" id="regPassMeterFill"></div>
+              </div>
+              <p class="reg-pass-error hidden" id="regPassError" role="alert"></p>
+            </label>
+          </div>
+          <button type="button" class="btn-secondary-full btn-on-accent" id="btnRegister">יצירת חשבון</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- מסך 2: האתר המלא (אחרי התחברות) -->
+  <div id="appView" class="hidden">
+    <header class="site-header">
+      <div class="inner inner--app">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">מ</div>
+          <div>
+            <h1>מתכונים</h1>
+            <span>מתכונים ביתיים — שיתוף ושמירה במקום אחד</span>
+          </div>
+        </div>
+        <div id="userBlock" class="header-user">
+          <span class="header-user-email" id="userEmail"></span>
+          <button type="button" class="ghost btn-logout-header" id="btnLogout">יציאה</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero hero--short">
+      <div class="inner">
+        <h2>מה בא לך לבשל היום?</h2>
+        <p>עייני במתכונים, שמרי מתכונים פרטיים או שתפי עם כולם.</p>
+      </div>
+    </section>
+
+    <div class="layout layout-single">
+      <main class="main-flow">
+        <div class="panel">
+          <h2>קטגוריות</h2>
+          <div id="categoriesStrip"><span class="chip muted">טוען…</span></div>
+
+          <h2 class="panel-subtitle">מתכונים</h2>
+          <p class="add-recipe-cta">
+            <a href="/add-recipe.html" class="btn-add-recipe-page">+ הוספת מתכון חדש</a>
+          </p>
+          <div id="listAlert" class="alert hidden"></div>
+          <div class="toolbar toolbar-main">
+            <label class="field-grow">חיפוש
+              <input type="search" id="searchInput" placeholder="חיפוש לפי שם, תיאור או קטגוריה" />
+            </label>
+            <label class="field-fixed">מתכונים בעמוד
+              <input type="number" id="limitInput" value="10" min="1" class="input-narrow" />
+            </label>
+            <div class="toolbar-actions">
+              <button type="button" id="btnLoadRecipes">חיפוש</button>
+            </div>
+          </div>
+          <div id="recipeGrid" class="recipe-grid"></div>
+          <div class="pager pager-balanced">
+            <button type="button" class="ghost pager-btn" id="btnPrev">עמוד קודם</button>
+            <button type="button" class="ghost pager-btn" id="btnNext">עמוד הבא</button>
+          </div>
+          <p id="pagerInfo" class="pager-meta muted"></p>
+
+          <div id="recipeDetail" class="detail hidden"></div>
+        </div>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      מתכונים · כל הזכויות שמורות
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
