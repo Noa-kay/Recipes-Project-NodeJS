@@ -1,0 +1,31 @@
+[
+  {
+    "_id": "69f1b5c9b5005f5dc3bf2a64",
+    "name": "Atlas Export Recipe",
+    "description": "Created for DB export",
+    "categories": [
+      "69f1b5cb4bebd6b4ebcc8815"
+    ],
+    "preparationTime": 15,
+    "difficulty": 3,
+    "layers": [
+      {
+        "description": "Base",
+        "ingredients": [
+          "flour",
+          "sugar"
+        ]
+      }
+    ],
+    "instructions": [
+      "Mix",
+      "Bake at 180C"
+    ],
+    "image": "",
+    "isPrivate": false,
+    "addedBy": "69f1b5c8b5005f5dc3bf2a63",
+    "addedDate": "2026-04-29T07:39:53.036Z",
+    "createdAt": "2026-04-29T07:39:53.038Z",
+    "updatedAt": "2026-04-29T07:39:53.038Z"
+  }
+]
