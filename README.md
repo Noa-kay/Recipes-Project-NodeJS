@@ -1,89 +1,77 @@
 # Recipes Server Project (Node.js + Express + MongoDB Atlas)
 
-## מטרת הפרויקט (לפי המסמך)
-שרת **API RESTful** ב־Express עם **MongoDB Atlas**.  
-הבדיקה הנדרשת היא דרך **Postman** או **Thunder Client** (ייבוא הקולקציה מהפרויקט) — אין כאן אפליקציית דפדפן מלאה.
+## Project Objective
+This project is a **RESTful API** server built with **Express** and **MongoDB Atlas**.  
+The primary testing interface is via **Postman** or **Thunder Client** (by importing the provided collection). While a basic UI is available for demonstration, the core focus is backend logic and API functionality.
 
-## Project description
-RESTful API for users, recipes, and categories.
+## Project Description
+A comprehensive RESTful API managing users, recipes, and categories.
 
-- JWT authentication
-- Roles: `admin`, `user` (registered), guest (no token)
-- Joi validation
-- Errors: `{ "error": { "message": "..." } }`
-- CORS: ראו סעיף **CORS** למטה.
+- **Authentication:** JWT (JSON Web Tokens)
+- **Roles:** `admin`, `user` (registered), and guest (unauthenticated)
+- **Validation:** Schema validation using Joi
+- **Error Handling:** Standardized format: `{ "error": { "message": "..." } }`
+- **CORS:** Configurable via environment variables (see CORS section below)
 
-## שלוש רמות משתמש והרשאות (API + דמו ב־`public/`)
+## Authorization Levels and Permissions
 
-| סוג | תיאור | JWT |
+| Role | Description | JWT Required |
 |-----|--------|-----|
-| **אורח** | לא מחובר | ללא |
-| **משתמש רשום** | `role: user` אחרי `/auth/register` או `/auth/login` | נדרש לפעולות כתיבה |
-| **מנהל** | `role: admin` | נדרש |
+| **Guest** | Unauthenticated | No |
+| **Registered User** | `role: user` (post-login) | Yes (for write operations) |
+| **Administrator** | `role: admin` | Yes |
 
-מטריצת פעולות (השרת אוכף; הממשק מסתיר כפתורים כשאין הרשאה):
-
-| פעולה | אורח | משתמש רשום | מנהל |
+### Permission Matrix:
+| Action | Guest | Registered User | Administrator |
 |--------|:----:|:-----------:|:----:|
-| הרשמה / התחברות | כן | — | — |
-| צפייה במתכונים ציבוריים, קטגוריות, בריאות | כן | כן | כן |
-| צפייה במתכונים **פרטיים** (של עצמך) | לא | כן | כן |
-| יצירת מתכון, העלאת תמונה | לא | כן | כן |
-| **עריכה / מחיקה** של מתכון | לא | רק מתכונים שהוספת | כל המתכונים |
-| רשימת כל המשתמשים, מחיקת משתמש | לא | לא | כן |
-| שינוי סיסמה | לא | לעצמך בלבד | לעצמך או לאחרים (לפי לוגיקת השרת) |
+| Register / Login | Yes | — | — |
+| View Public Recipes & Categories | Yes | Yes | Yes |
+| View **Private** Recipes (Self) | No | Yes | Yes |
+| Create Recipe / Upload Image | No | Yes | Yes |
+| **Edit / Delete** Recipe | No | Only personal recipes | All recipes |
+| User Management (List/Delete) | No | No | Yes |
+| Password Management | No | Self only | Self or Others |
 
-בדף הדמו: אחרי התחברות, פתחי מתכון מהרשימה — אם את **בעלת המתכון** או **מנהלת**, יופיעו **עריכה** ו**מחיקה** מעל פרטי המתכון. עריכה פותחת את `/add-recipe.html?edit=...` באותו חלון.
+*Note: In the demo interface, "Edit" and "Delete" options appear dynamically for the recipe owner or an administrator.*
 
-## CORS וגישה מדפדפן
+## CORS and Browser Access
+- **Default:** `CLIENT_ORIGIN=*` in `.env`. The server reflects the request `Origin` header, allowing development from any local address or API tool.
+- **Specific Clients (e.g., Angular):** To restrict access, set the specific address in `.env`:  
+  `CLIENT_ORIGIN=http://localhost:4200`
 
-- ברירת מחדל: **`CLIENT_ORIGIN=*`** ב־`.env` — השרת משקף את כותרת `Origin` של הבקשה (`cors` עם `origin: true`), כך שאפשר לפתח מכל כתובת (דף סטטי מקומי, כלי API, או לקוח אחר) עם `credentials` / עוגיות אם יתווספו בעתיד.
-- **מגבלה ל־Angular בלבד:** הגדירי ב־`.env`  
-  `CLIENT_ORIGIN=http://localhost:4200`  
-  (כתובת מלאה עם סכימה; לפרודקשן החליפי לכתובת האפליקציה).
-
-## URLs (assignment style)
-Primary routes (as in the spec):
-
+## API Routing
+Primary routes are accessible directly or via the **`/api/*`** prefix for compatibility:
 - `/auth`, `/users`, `/recipes`, `/categories`, `/health`
 
-The same routers are also mounted under **`/api/*`** (e.g. `/api/recipes`) for compatibility.
-
-`GET /` מגיש דף גלישה בסיסי מתוך `public/` (התחברות, רשימת מתכונים והוספה).
+`GET /` serves a basic interface from the `public/` directory for quick testing.
 
 ## Setup
 1. `npm install`
 2. Copy `.env.example` to `.env`
-3. For **submission**: set **`MONGO_URI`** to your Atlas connection string, **`USE_MEMORY_DB=false`**, allow cluster access from all IPs in Atlas.
+3. **For Submission:** Set `MONGO_URI` to your Atlas connection string and ensure `USE_MEMORY_DB=false`.
 4. `npm run dev` or `npm start`
 
-## Environment variables
+## Environment Variables
 | Variable | Description |
 |----------|-------------|
-| `PORT` | Server port (default 3000) |
-| `MONGO_URI` | Atlas connection string (required if `USE_MEMORY_DB` is not `true`) |
-| `USE_MEMORY_DB` | `true` = embedded MongoDB for local smoke tests only |
-| `JWT_SECRET` | Required |
-| `JWT_EXPIRES_IN` | Default `7d` |
-| `CLIENT_ORIGIN` | מקור CORS: `*` = כל מקור (משקף `Origin`); אחרת כתובת מדויקת, למשל `http://localhost:4200` לאנגולר |
+| `PORT` | Server port (default: 3000) |
+| `MONGO_URI` | MongoDB Atlas connection string |
+| `USE_MEMORY_DB` | `true` = embedded MongoDB (local smoke tests only) |
+| `JWT_SECRET` | Required for token encryption |
+| `JWT_EXPIRES_IN` | Token duration (default: `7d`) |
+| `CLIENT_ORIGIN` | CORS setting: `*` (all) or specific URL |
 
-## Data models (summary)
+## Data Models
 ### User
-`username`, `password` (hashed, strong password validated), unique `email`, `address`, `role` (`admin` | `user`).
+Includes `username`, `password` (hashed), unique `email`, `address`, and `role` (`admin` | `user`).
 
 ### Recipe
-`name`, `description`, **`categories`** (array of Category refs — at least one), `preparationTime`, `difficulty` (1–5), `addedDate`, `layers[]`, `instructions[]`, `image`, `isPrivate`, `addedBy`.
-
-API body accepts **either** `category` (single category **code** string) **or** `categories` (array of codes). Categories are created/linked automatically when saving recipes (no separate “add category” endpoint).
+Includes `name`, `description`, `categories` (array of refs), `preparationTime`, `difficulty` (1–5), `layers[]`, `instructions[]`, `image`, `isPrivate`, and `addedBy`.
 
 ### Category
-`code`, `description`, `recipeCount`, `recipes[]` — maintained when recipes change.
+Includes `code`, `description`, and `recipeCount`. Categories are updated automatically when recipes are modified.
 
-### הערות מודל (Referencing)
-- **מתכון → משתמש:** `addedBy` מקשר ל־User (לא משכפלים פרטי משתמש במסמך המתכון).
-- **קטגוריה → מתכונים:** לקטגוריה יש מערך `recipes` של מזהי מתכונים, לשליפה עם populate.
-
-## API table (primary paths)
+## API Reference (Primary Paths)
 | Resource | Method | URL | Auth |
 |----------|--------|-----|------|
 | Health | GET | `/health` | Guest |
@@ -92,85 +80,30 @@ API body accepts **either** `category` (single category **code** string) **or** 
 | Users | GET | `/users` | Admin |
 | Users | PATCH | `/users/:id/password` | Self / Admin |
 | Users | DELETE | `/users/:id` | Admin |
-| Recipes | GET | `/recipes?search=...&limit=&page=` | Guest / User |
-| Recipes | GET | `/recipes/:id` | Guest / User |
-| Recipes | GET | `/recipes/max-time/:minutes` | Guest / User |
-| Recipes | POST | `/recipes/upload-image` | User / Admin — `multipart/form-data`, field `image`; returns `{ url }` (saved under `public/uploads/recipes`, served as static files) |
+| Recipes | GET | `/recipes` | Guest / User |
+| Recipes | POST | `/recipes/upload-image` | User / Admin |
 | Recipes | POST | `/recipes` | User / Admin |
 | Recipes | PUT | `/recipes/:id` | Owner / Admin |
 | Recipes | DELETE | `/recipes/:id` | Owner / Admin |
-| Categories | GET | `/categories` | Guest / User |
-| Categories | GET | `/categories/with-recipes` | Guest / User |
-| Categories | GET | `/categories/:key` (code or name) | Guest / User |
+| Categories| GET | `/categories` | Guest / User |
 
-Same paths work with the `/api` prefix (e.g. `/api/recipes`).
+## Testing
+### Postman / Thunder Client
+Import the following collection:  
+`postman/Recipes-API.postman_collection.json`
 
-## Postman / Thunder Client
-Import:
+### Automated Tests
+Run `npm run smoke` while the server is active to execute the primary HTTP flow.
 
-- `postman/Recipes-API.postman_collection.json`
+## Submission Package
+1. **GitHub Repository:** [Noa-kay/Recipes-Project-NodeJS](https://github.com/Noa-kay/Recipes-Project-NodeJS)
+2. **Environment File:** Provided `.env.example`.
+3. **Database Export:** Atlas export file (JSON or Dump).
+4. **Walkthrough:** 5-10 minute project video.
 
-Folders: **Auth**, **Users**, **Recipes**, **Categories**, **Health**.
+---
 
-Optional CLI smoke (same HTTP flows): `npm run smoke` (server must be running).
-
-Repository: [Noa-kay/Recipes-Project-NodeJS](https://github.com/Noa-kay/Recipes-Project-NodeJS)
-
-## Error format
-```json
-{
-  "error": {
-    "message": "..."
-  }
-}
-```
-
-## Optional extras (not required)
-Recipe **image upload** is implemented (`POST /recipes/upload-image`, files under `public/uploads/recipes`). Still optional for deployment: **Render**, Socket.io, email, aggregates, etc.
-
-## Submission package (teacher notes)
-
-Submit all of the following:
-
-1. **GitHub repository link**  
-   Current repo: [Noa-kay/Recipes-Project-NodeJS](https://github.com/Noa-kay/Recipes-Project-NodeJS)
-2. **Environment file**  
-   Include `.env.example` in GitHub (already included).  
-   For grading, also send a real `.env` file separately (not committed) with:
-   - `PORT=3000`
-   - `MONGO_URI=<your-atlas-uri>`
-   - `USE_MEMORY_DB=false`
-   - `JWT_SECRET=<strong-secret>`
-   - `JWT_EXPIRES_IN=7d`
-   - `CLIENT_ORIGIN=*` (or `http://localhost:4200`)
-3. **Database export file** (from Atlas)
-4. **5-10 minute video** walkthrough
-
-## How to export DB for submission
-
-> Replace placeholders (`<...>`) with your values.
-
-### Option A - Full database export (recommended)
-
+### Database Export Instructions
+**Option A: Full Dump (Recommended)**
 ```bash
 mongodump --uri="<MONGO_URI>" --out="./db-export"
-```
-
-Then zip the folder:
-
-```bash
-zip -r db-export.zip db-export
-```
-
-Submit `db-export.zip`.
-
-### Option B - Single JSON export per collection
-
-```bash
-mongoexport --uri="<MONGO_URI>" --db="recipes_db" --collection="users" --out="users.json" --jsonArray
-mongoexport --uri="<MONGO_URI>" --db="recipes_db" --collection="recipes" --out="recipes.json" --jsonArray
-mongoexport --uri="<MONGO_URI>" --db="recipes_db" --collection="categories" --out="categories.json" --jsonArray
-```
-
-Zip the JSON files and submit.
-
